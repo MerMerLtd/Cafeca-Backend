@@ -7,8 +7,10 @@ folder = "CafecaBE"
 debug = false
 
 [blockchain]
+type = "ethereum"
 
 [database]
+type = "firebase"
 
 [api]
 pathname = [

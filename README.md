@@ -21,9 +21,10 @@ Server: api.cafeca.cc
 ### 取得題目 ###
 [GET] https://find.cafeca.cc/api/questions
 
-```json
+```
 https://find.cafeca.cc/api/questions
-
+```
+```json
 [
   {
     "questionID": "Q00004",
@@ -46,9 +47,10 @@ https://find.cafeca.cc/api/questions
 ### 取得推薦 ###
 [GET] https://find.cafeca.cc/api/suggestion?{questionID}={answer}&position={geolocation}
 
-```json
+```
 https://find.cafeca.cc/api/suggestion?Q00005=1&Q00003=0&Q00002=1&position=25.0231878,121.5420401
-
+```
+```json
 {
   "product": "綠帽子",
   "store": "三%比率咖啡",
@@ -60,9 +62,10 @@ https://find.cafeca.cc/api/suggestion?Q00005=1&Q00003=0&Q00002=1&position=25.023
 ### 取得店家資訊 ###
 [GET] https://find.cafeca.cc/api/store/:storeID
 
-```json
+```
 https://find.cafeca.cc/api/store/TW00001
-
+```
+```json
 {
   "storeID": "TW00001",
   "store": "三%比率咖啡",

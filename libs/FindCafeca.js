@@ -25,7 +25,10 @@ class FindCafeca extends Bot {
         { questionID: 'Q00004', content: '想點一杯微笑，全糖', img: 'https://www.listenmoneymatters.com/wp-content/uploads/2018/04/19130-Question-Man-Lightbulb-1.jpg' },
         { questionID: 'Q00005', content: '需要一個擁抱，去冰', img: 'https://www.listenmoneymatters.com/wp-content/uploads/2018/04/19130-Question-Man-Lightbulb-1.jpg' },
         { questionID: 'Q00006', content: '聽見一個故事，微酸', img: 'https://www.listenmoneymatters.com/wp-content/uploads/2018/04/19130-Question-Man-Lightbulb-1.jpg' },
-        { questionID: 'Q00007', content: '我每天早上都很想睡', img: 'https://www.listenmoneymatters.com/wp-content/uploads/2018/04/19130-Question-Man-Lightbulb-1.jpg' }
+        { questionID: 'Q00007', content: '我每天早上都很想睡', img: 'https://www.listenmoneymatters.com/wp-content/uploads/2018/04/19130-Question-Man-Lightbulb-1.jpg' },
+        { questionID: 'Q00008', content: '為別人做過瘋狂的事情', img: 'https://www.listenmoneymatters.com/wp-content/uploads/2018/04/19130-Question-Man-Lightbulb-1.jpg' },
+        { questionID: 'Q00009', content: '為去年的自己感到尷尬', img: 'https://www.listenmoneymatters.com/wp-content/uploads/2018/04/19130-Question-Man-Lightbulb-1.jpg' },
+        { questionID: 'Q00010', content: '喜歡早起', img: 'https://www.listenmoneymatters.com/wp-content/uploads/2018/04/19130-Question-Man-Lightbulb-1.jpg' }
       ];
       const result = dvalue.randomPick(questions, 3);
       return Promise.resolve(result);  

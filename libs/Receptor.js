@@ -6,6 +6,7 @@ const spdy  = require('spdy');
 const koa = require('koa');
 const Router = require('koa-router');
 const bodyParser = require('koa-body');
+const staticServe = require('koa-static');
 const dvalue = require('dvalue');
 
 const Bot = require(path.resolve(__dirname, 'Bot.js'));
@@ -31,7 +32,8 @@ class Receptor extends Bot {
     .then(() => this.createPem())
     .then((options) => {
       const app = new koa();
-      app.use(bodyParser({ multipart: true }))
+      app.use(staticServe(this.config.base.static))
+         .use(bodyParser({ multipart: true }))
          .use(this.router.routes())
          .use(this.router.allowedMethods());
       return this.listen({ options, callback: app.callback() });

@@ -4,6 +4,7 @@ title = "CafecaBackend"
 
 [base]
 folder = "CafecaBE"
+static = "/etc/findCafeca"
 debug = false
 
 [blockchain]

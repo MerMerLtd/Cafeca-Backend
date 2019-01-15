@@ -4,9 +4,10 @@
   "description": "Cafeca Backend Service",
   "main": "bin/start.js",
   "bin": {
-    "bc2": "bin/start.js"
+    "cafeca": "bin/start.js"
   },
   "scripts": {
+    "start": "bin/start.js",
     "test": "bin/test.js"
   },
   "repository": {

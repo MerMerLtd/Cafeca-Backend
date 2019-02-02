@@ -43,9 +43,9 @@ Utils.readConfig({ configPath: cfg })
   } else if(argv.pause > -1) {
     Utils.killProcess({ PID: argv.pause, pause: true })
     .then(() => Utils.listProcess());
-  } else if(!argv.start) {
+  } else if(!!argv.start) {
     const commandArgv = process.argv.slice(2);
-    commandArgv.push('-s');
+    commandArgv.splice(commandArgv.indexOf('-s'), 1);
 
     Utils.initialFolder(config)
     .then((folder) => {
@@ -61,7 +61,7 @@ Utils.readConfig({ configPath: cfg })
         Utils.listProcess({ packageInfo });
       }, 1000);
     });
-  } else if(!!argv.start) {
+  } else if(!argv.start) {
     Utils.initialAll(argv)
     .then((options) => Utils.initialBots(options))
     .then((Bots) => Utils.startBots({ Bots }))

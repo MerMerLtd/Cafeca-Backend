@@ -8,7 +8,8 @@
   },
   "scripts": {
     "start": "bin/start.js",
-    "test": "bin/start.js -s"
+    "test": "bin/start.js -s",
+    "deploy": "pm2 deploy deploy.config production"
   },
   "repository": {
     "type": "git",

@@ -5,11 +5,11 @@ module.exports = {
    */
     apps: [
         {
-            name: 'iSuntvLive',
-            script: 'build/server.js',
+            name: 'Cafeca-Backend',
+            script: 'bin/start.js',
             log_date_format: 'YYYY-MM-DD',
             watch: [
-                'build', 'public', 'locales'
+                'lib'
             ],
             env: {
                 NODE_ENV: 'production'
@@ -25,11 +25,11 @@ module.exports = {
         production: {
             user: 'ubuntu',
             key: `${process.env.HOME}/Documents/ssh/chinaiSun.pem`,
-            host: '54.65.45.58',
+            host: '52.199.54.228',
             ref: 'origin/master',
-            repo: 'https://white87332@bitbucket.org/tidenet/isuntvlive.git',
-            path: '/home/ubuntu/workspace/isuntvlive',
-            'post-deploy': '. ~/.profile && yarn && yarn build && sudo pm2 reload /home/ubuntu/workspace/isuntvlive/source/ecosystem.config.js',
+            repo: 'https://github.com/MerMerLtd/Cafeca-Backend',
+            path: '/etc/Cafeca-Backend',
+            'post-deploy': 'pm2 reload /etc/Cafeca-Backend/ecosystem.config.js',
         }
     }
 };

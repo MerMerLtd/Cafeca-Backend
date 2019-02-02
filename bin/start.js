@@ -20,7 +20,7 @@ const optionDefinitions = [
 
 const argv = commandLineArgs(optionDefinitions);
 const command = path.resolve(__dirname, 'start.js');
-const cfg = argv.configPath ? argv.configPath : path.resolve(__dirname, '../config.toml');
+const cfg = argv.configPath ? argv.configPath : path.resolve(__dirname, '../private/config.toml');
 
 Utils.readConfig({ configPath: cfg })
 .then((config) => {

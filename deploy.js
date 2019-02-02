@@ -24,12 +24,12 @@ module.exports = {
     deploy: {
         production: {
             user: 'ubuntu',
-            key: `${process.env.HOME}/Documents/ssh/chinaiSun.pem`,
+            key: `private/cafeca.pem`,
             host: '52.199.54.228',
             ref: 'origin/master',
             repo: 'https://github.com/MerMerLtd/Cafeca-Backend',
             path: '/etc/Cafeca-Backend',
-            'post-deploy': 'pm2 reload /etc/Cafeca-Backend/ecosystem.config.js',
+            'post-deploy': 'pm2 reload /etc/Cafeca-Backend/deploy',
         }
     }
 };

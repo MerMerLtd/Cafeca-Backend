@@ -106,7 +106,7 @@ class Utils {
   }
 
   static initialAll({ version, configPath }) {
-    const cfg = configPath ? configPath : path.resolve(__dirname, '../config.toml');
+    const cfg = configPath ? configPath : path.resolve(__dirname, '../private/config.toml');
     return this.readConfig({ configPath: cfg })
     .then((config) => {
       const rsConfig = config;

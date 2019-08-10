@@ -71,6 +71,73 @@ class Utils {
     }
     return result;
   }
+
+  static jsonStableStringify(obj, opts) {
+    if (!opts) opts = {};
+    if (typeof opts === 'function') opts = { cmp: opts };
+    let space = opts.space || '';
+    if (typeof space === 'number') space = Array(space+1).join(' ');
+    const cycles = (typeof opts.cycles === 'boolean') ? opts.cycles : false;
+    const replacer = opts.replacer || function(key, value) { return value; };
+  
+    const cmp = opts.cmp && (function (f) {
+      return (node) => {
+        (a, b) => {
+          const aobj = { key: a, value: node[a] };
+          const bobj = { key: b, value: node[b] };
+          return f(aobj, bobj);
+        };
+      };
+    })(opts.cmp);
+  
+    const seen = [];
+    return (function stringify(parent, key, node, level) {
+      const indent = space ? ('\n' + new Array(level + 1).join(space)) : '';
+      const colonSeparator = space ? ': ' : ':';
+  
+      if (node && node.toJSON && typeof node.toJSON === 'function') {
+        node = node.toJSON();
+      }
+  
+      node = replacer.call(parent, key, node);
+  
+      if (node === undefined) {
+        return;
+      }
+      if (typeof node !== 'object' || node === null) {
+        return JSON.stringify(node);
+      }
+      if (Array.isArray(node)) {
+        const out = [];
+        for (var i = 0; i < node.length; i++) {
+          const item = stringify(node, i, node[i], level+1) || JSON.stringify(null);
+          out.push(indent + space + item);
+        }
+        return '[' + out.join(',') + indent + ']';
+      } else {
+        if (seen.indexOf(node) !== -1) {
+          if (cycles) return JSON.stringify('__cycle__');
+            throw new TypeError('Converting circular structure to JSON');
+        } else {
+          seen.push(node);
+        }
+        const keys = Object.keys(node).sort(cmp && cmp(node));
+        const out = [];
+        for (var i = 0; i < keys.length; i++) {
+          const key = keys[i];
+          const value = stringify(node, key, node[key], level+1);
+  
+          if(!value) continue;
+  
+          const keyValue = JSON.stringify(key) + colonSeparator + value;
+          out.push(indent + space + keyValue);
+        }
+        seen.splice(seen.indexOf(node), 1);
+        return '{' + out.join(',') + indent + '}';
+      }
+    })({ '': obj }, '', obj, 0);
+  };
+
   static toToml(data, notRoot) {
     let result;
     if(data instanceof Object || typeof data == 'object') {
@@ -106,14 +173,12 @@ class Utils {
   }
 
   static initialAll({ version, configPath }) {
-    const cfg = configPath ? configPath : path.resolve(__dirname, '../private/config.toml');
-    return this.readConfig({ configPath: cfg })
+    const filePath = configPath ? configPath : path.resolve(__dirname, '../../../private/config.toml');
+    return this.readConfig({ filePath })
     .then((config) => {
       const rsConfig = config;
-      // const uploadFolder = path.resolve(config.homeFolder, 'uploads');
       rsConfig.argv = arguments[0];
       return this.initialFolder(config)
-      // .then(() => this.initialFolder({ homeFolder: config.uploadFolder }))
       .then(() => rsConfig);
     })
     .then((config) => Promise.all([
@@ -133,43 +198,86 @@ class Utils {
       logger: rs[3],
       i18n: rs[4]
     }))
+    .catch(console.trace);
   }
 
-  static readConfig({ configPath }) {
-    let config;
-    return this.readPackageInfo()
-    .then((packageInfo) => {
-      const basePath = path.resolve(os.homedir(), packageInfo.name);
-      return new Promise((resolve, reject) => {
-        fs.readFile(configPath, (err, data) => {
-          if(err) {
-            return reject(err);
-          } else {
-            config = toml.parse(data);
-            config.packageInfo = packageInfo;
-            config.runtime = {
-              configPath,
-              startTime: new Date().getTime()
-            };
-            config.homeFolder = config.base.folder ?
-              path.resolve(basePath, config.base.folder) :
-              basePath;
-            // config.uploadFolder = path.resolve(basePath, 'uploads');
-            return resolve(config);
-          }
-        });
-      });
-    });
+  static readJSON({ filePath }) {
+    return this.readFile({ filePath })
+    .then((data) => JSON.parse(data))
+  }
+
+  static readFile({ filePath }) {
+    return new Promise((resolve, reject) => {
+      fs.readFile(filePath, (err, data) => {
+        if(err) {
+          reject(err);
+        } else {
+          resolve(data)
+        }
+      })
+    })
+  }
+
+  static fileExists({ filePath }) {
+    return new Promise((resolve) => {
+      fs.access(filePath, fs.constants.F_OK, (err) => {
+        resolve(!err);
+      })
+    })
+  }
+
+  static async readConfig({ filePath }) {
+    let config, defaultCFG, currentCFG;
+  
+    const packageInfo = await this.readPackageInfo();
+    const basePath = path.resolve(os.homedir(), packageInfo.name);
+    const fileExists = await this.fileExists({ filePath });
+    const defaultCFGP = path.resolve(__dirname, '../../../default.config.toml');
+    const defaultCFGTOML = await this.readFile({ filePath: defaultCFGP });
+    try {
+      defaultCFG = toml.parse(defaultCFGTOML);
+    } catch(e) {
+      return Promise.reject(new Error(`Invalid config file: ${defaultCFGP}`));
+    }
+
+    if(!fileExists) {
+      config = defaultCFG
+    } else {
+      const currentCFGP = filePath;
+      const currentCFGTOML = await this.readFile({ filePath: currentCFGP });
+      try {
+        currentCFG = toml.parse(currentCFGTOML);
+      } catch(e) {
+        return Promise.reject(new Error(`Invalid config file: ${currentCFGP}`));
+      }
+      config = dvalue.default(currentCFG, defaultCFG);
+    }
+    config.packageInfo = packageInfo;
+    config.runtime = {
+      filePath,
+      startTime: new Date().getTime()
+    };
+    config.homeFolder = config.base.folder ?
+      path.resolve(basePath, config.base.folder) :
+      basePath;
+    return Promise.resolve(config);
+  }
+
+  static getConfig() {
+    return JSON.parse(process.env.MERMER || '{}');
   }
 
   static readPackageInfo() {
-    const pkg = require(path.resolve(__dirname, '../package.json'));
-    const packageInfo = {
-      name: pkg.name,
-      version: pkg.version,
-      powerby: pkg.name + " v" + pkg.version
-    };
-    return Promise.resolve(packageInfo);
+    const filePath = path.resolve(__dirname, '../../../package.json');
+    return this.readJSON({ filePath  })
+    .then((pkg) => {
+      const packageInfo = {
+        name: pkg.name,
+        version: pkg.version,
+        powerby: pkg.name + " v" + pkg.version
+      };
+      return Promise.resolve(packageInfo);
+    });
   }
 
   static listProcess() {
@@ -321,7 +429,7 @@ class Utils {
   static initialLevel({ homeFolder }) {
     const dbPath = path.resolve(homeFolder, 'dataset');
     return this.initialFolder({ homeFolder: dbPath })
-    .then(() => level(dbPath));
+    .then(() => level(dbPath, { valueEncoding: 'json' }));
   }
 
   static initialDB({ database }) {
@@ -380,6 +488,7 @@ class Utils {
 
   static startBots({ Bots }) {
     return Promise.all(Bots.map((bot) => bot.start()))
+    .then(() => Promise.all(Bots.map((bot) => bot.ready())))
     .then(() => Bots );
   }
 
@@ -387,6 +496,90 @@ class Utils {
     const database = Bots[0].database;
     database.mongodb.close();
     database.leveldb.close();
+  }
+
+  static crossOrigin(options = {}) {
+    const defaultOptions = {
+      allowMethods: ['GET', 'PUT', 'POST', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS']
+    };
+  
+    // set defaultOptions to options
+    options = Object.assign({}, defaultOptions, options); // eslint-disable-line no-param-reassign
+  
+    // eslint-disable-next-line consistent-return
+    return async function cors(ctx, next) {
+      // always set vary Origin Header
+      // https://github.com/rs/cors/issues/10
+      ctx.vary('Origin');
+  
+      let origin;
+      if (typeof options.origin === 'function') {
+        origin = options.origin(ctx);
+      } else {
+        origin = options.origin || ctx.get('Origin') || '*';
+      }
+      if (!origin) {
+        return await next();
+      }
+  
+      // Access-Control-Allow-Origin
+      ctx.set('Access-Control-Allow-Origin', origin);
+  
+      if (ctx.method === 'OPTIONS') {
+        // Preflight Request
+        if (!ctx.get('Access-Control-Request-Method')) {
+          return await next();
+        }
+  
+        // Access-Control-Max-Age
+        if (options.maxAge) {
+          ctx.set('Access-Control-Max-Age', String(options.maxAge));
+        }
+  
+        // Access-Control-Allow-Credentials
+        if (options.credentials === true) {
+          // When used as part of a response to a preflight request,
+          // this indicates whether or not the actual request can be made using credentials.
+          ctx.set('Access-Control-Allow-Credentials', 'true');
+        }
+  
+        // Access-Control-Allow-Methods
+        if (options.allowMethods) {
+          ctx.set('Access-Control-Allow-Methods', options.allowMethods.join(','));
+        }
+  
+        // Access-Control-Allow-Headers
+        if (options.allowHeaders) {
+          ctx.set('Access-Control-Allow-Headers', options.allowHeaders.join(','));
+        } else {
+          ctx.set('Access-Control-Allow-Headers', ctx.get('Access-Control-Request-Headers'));
+        }
+  
+        ctx.status = 204; // No Content
+      } else {
+        // Request
+        // Access-Control-Allow-Credentials
+        if (options.credentials === true) {
+          if (origin === '*') {
+            // `credentials` can't be true when the `origin` is set to `*`
+            ctx.remove('Access-Control-Allow-Credentials');
+          } else {
+            ctx.set('Access-Control-Allow-Credentials', 'true');
+          }
+        }
+  
+        // Access-Control-Expose-Headers
+        if (options.exposeHeaders) {
+          ctx.set('Access-Control-Expose-Headers', options.exposeHeaders.join(','));
+        }
+  
+        try {
+          await next();
+        } catch (err) {
+          throw err;
+        }
+      }
+    };
   }
 }
 

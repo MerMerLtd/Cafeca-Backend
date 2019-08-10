@@ -1,0 +1,12 @@
+{
+  "_table": "User",
+  "id": "primary",
+  "mobile": {
+    "mmc": "string",
+    "number": "string"
+  },
+  "verify": {
+    "expired": "number",
+    "code": "string"
+  }
+}

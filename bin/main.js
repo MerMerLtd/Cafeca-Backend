@@ -2,11 +2,59 @@
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
-const spawn = require('child_process').spawn;
-
+const { spawn } = require('child_process');
+const { ncp } = require('ncp');
 const commandLineArgs = require('command-line-args');
+const Utils = require(path.resolve(__dirname, '../src/backend/libs/Utils.js'));
 
-const Utils = require(path.resolve(__dirname, '../libs/Utils.js'));
+/* initial project */
+const initialIndex = process.argv.indexOf('init')
+const doInitial = initialIndex > -1;
+if(doInitial) {
+  const msg = 'Initial Project';
+  const projectArgv = process.argv[initialIndex + 1] || 'MerMerProject';
+  const projectName = path.parse(projectArgv).name;
+  const basePath = process.cwd();
+  const mermerPath = path.resolve(__dirname, '../');
+  const projectPath = path.resolve(basePath, projectArgv);
+  console.log(`\x1b[1m\x1b[32m${msg}\x1b[0m\x1b[21m ${projectName}`);
+  ncp(mermerPath, projectPath, (err) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log('done!');
+  });
+  return;
+}
+
+/* update project */
+const updateIndex = process.argv.indexOf('update')
+const doUpdate = updateIndex > -1;
+if(doUpdate) {
+  const msg = 'Update Project';
+  const projectArgv = process.argv[updateIndex + 1] || 'MerMerProject';
+  const projectName = path.parse(projectArgv).name;
+  const basePath = process.cwd();
+  const mermerPath = path.resolve(__dirname, '../');
+  const projectPath = path.resolve(basePath, projectArgv);
+  console.log(`\x1b[1m\x1b[32m${msg}\x1b[0m\x1b[21m ${projectName}`);
+  ncp(mermerPath, projectPath, {
+    filter: (source) => { 
+      return !/README.md$/.test(source) && 
+             !/package.json$/.test(source);
+    }
+  }, (err) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log('done!');
+  });
+  return;
+}
+
+/* normal process */
 const optionDefinitions = [
   { name: 'configPath', alias: 'c', type: String },
   { name: 'version', alias: 'v', type: Boolean },
@@ -19,10 +67,10 @@ const optionDefinitions = [
 ];
 
 const argv = commandLineArgs(optionDefinitions);
-const command = path.resolve(__dirname, 'start.js');
+const command = path.resolve(__dirname, 'main.js');
 const cfg = argv.configPath ? argv.configPath : path.resolve(__dirname, '../private/config.toml');
 
-Utils.readConfig({ configPath: cfg })
+Utils.readConfig({ filePath: cfg })
 .then((config) => {
   const { packageInfo, homeFolder } = config;
   const systemHome = path.resolve(os.homedir(), packageInfo.name);
@@ -66,7 +114,6 @@ Utils.readConfig({ configPath: cfg })
     .then((options) => Utils.initialBots(options))
     .then((Bots) => Utils.startBots({ Bots }))
     .catch((e) => { console.trace(e); })
-    //.then((Bots) => Utils.close({ Bots }));
   }
 })
-
+.catch(console.trace);

@@ -18,8 +18,8 @@ module.exports = {
   deploy: {
     production: {
       user: 'ubuntu',
-      key: `private/cafeca.pem`,
-      host: '52.199.54.228',
+      key: `private/Cafeca.pem`,
+      host: '13.231.110.151',
       ref: 'origin/master',
       repo: 'https://github.com/MerMerLtd/Cafeca-Backend',
       path: '/etc/Cafeca-Backend',

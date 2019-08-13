@@ -1,4 +1,5 @@
 const path = require('path');
+const crypto = require('crypto');
 
 const Bot = require(path.resolve(__dirname, 'Bot.js'));
 

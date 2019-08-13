@@ -2,10 +2,10 @@ const path = require('path');
 
 const Bot = require(path.resolve(__dirname, 'Bot.js'));
 
-class User extends Bot {
+class Asset extends Bot {
   constructor() {
     super();
-    this.name = 'User';
+    this.name = 'Asset';
   }
 
   init({ database, logger, i18n }) {
@@ -20,63 +20,56 @@ class User extends Bot {
     return super.ready();
   }
 
-  register() {
+  addCreditCard() {
     return Promise.resolve({
       success: true,
-      data: {
-        UID:  crypto.randomBytes(12).toString('hex'),
-        next: new Date().getTime() + 3000000
-      }
+      data: {}
     });
   }
 
-  login() {
-    return this.register();
-  }
-
-  verify() {
+  removeCreditCard() {
     return Promise.resolve({
         success: true,
         data: {}
       });
   }
 
-  logout() {
+  listCard() {
     return Promise.resolve({
         success: true,
         data: {}
       });
   }
 
-  checkToken() {
+  listGivenCard() {
     return Promise.resolve({
         success: true,
         data: {}
       });
   }
 
-  renewToken() {
+  readCard() {
     return Promise.resolve({
         success: true,
         data: {}
       });
   }
 
-  getProfile() {
+  giveCard() {
     return Promise.resolve({
         success: true,
         data: {}
       });
   }
 
-  updateProfile() {
+  takeCard() {
     return Promise.resolve({
         success: true,
         data: {}
       });
   }
 
-  checkin() {
+  returnCard() {
     return Promise.resolve({
         success: true,
         data: {}
@@ -84,4 +77,4 @@ class User extends Bot {
   }
 }
 
-module.exports = User;
+module.exports = Asset;

@@ -15,5 +15,25 @@ type = "firebase"
 
 [api]
 pathname = [
-  "get | /,/version | Static.Utils.readPackageInfo"
+  "get | /,/version | Static.Utils.readPackageInfo",
+  "post | /api/v1/register | Bot.User.register",
+  "post | /api/v1/login | Bot.User.login",
+  "get | /api/v1/token/:UID/:code | Bot.User.verify",
+  "get | /api/v1/logout | Bot.User.logout",
+  "post | /api/v1/token/verify | Bot.User.checkToken",
+  "post | /api/v1/token/renew | Bot.User.renewToken",
+  "get | /api/v1/user/profile | Bot.User.getProfile",
+  "put | /api/v1/user/profile | Bot.User.updateProfile",
+  "post | /api/v1/user/checkin | Bot.User.checkin",
+  "post | /api/v1/user/credit | Bot.Asset.addCreditCard",
+  "delete | /api/v1/user/credit/:CCID | Bot.Asset.removeCreditCard",
+  "get | /api/v1/user/card | Bot.Asset.listCard",
+  "get | /api/v1/user/given | Bot.Asset.listGivenCard",
+  "get | /api/v1/user/card/:CAID | Bot.Asset.readCard",
+  "post | /api/v1/user/card/:CAID/give | Bot.Asset.giveCard",
+  "post | /api/v1/user/card/:CAID/take | Bot.Asset.takeCard",
+  "post | /api/v1/user/card/:CAID/return | Bot.Asset.returnCard",
+  "get | /api/v1/business/daily | Bot.Business.summaryDaily",
+  "get | /api/v1/business/monthly | Bot.Business.summaryMonthly",
+  "get | /api/v1/business/growth | Bot.Business.growth"
 ]

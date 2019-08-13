@@ -37,6 +37,9 @@ class Model {
   init(struct) {
     this.table = struct._table;
     this.struct = flatten(struct);
+    this.primaryKey = this.struct.find((v) => {
+      return v.value == 'primary';
+    });
     return true;
   }
   initValue() {
@@ -63,6 +66,9 @@ class Model {
     this._struct = flatten(struct).filter((v) => {
       return v.key.indexOf("_") != 0;
     });
+  }
+  get struct() {
+    return this._struct;
   }
 
   set value(value) {

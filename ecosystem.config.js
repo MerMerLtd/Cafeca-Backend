@@ -22,7 +22,7 @@ module.exports = {
       host: '13.231.110.151',
       ref: 'origin/master',
       repo: 'https://github.com/MerMerLtd/Cafeca-Backend',
-      path: '/etc/Cafeca-Backend',
+      path: '/etc/Cafeca',
       'post-deploy' : 'npm install && pm2 reload ecosystem.config.js --env production'
     }
   }

@@ -5,7 +5,7 @@ const Bot = require(path.resolve(__dirname, 'Bot.js'));
 class Business extends Bot {
   constructor() {
     super();
-    this.name = 'Business';
+    this.name = 'Line';
   }
 
   init({ database, logger, i18n }) {

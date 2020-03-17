@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/MerMerLtd/Cafeca-Backend#readme",
   "dependencies": {
+    "@line/bot-sdk": "^6.8.4",
     "command-line-args": "^5.0.2",
     "dvalue": "^1.0.20",
     "ecrequest": "^1.1.3",

@@ -35,5 +35,6 @@ pathname = [
   "post | /api/v1/user/card/:CAID/return | Bot.Asset.returnCard",
   "get | /api/v1/business/daily | Bot.Business.summaryDaily",
   "get | /api/v1/business/monthly | Bot.Business.summaryMonthly",
-  "get | /api/v1/business/growth | Bot.Business.growth"
+  "get | /api/v1/business/growth | Bot.Business.growth",
+  "all | /webhook/line | Bot.Line.webhook"
 ]

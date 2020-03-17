@@ -20,8 +20,9 @@ class Business extends Bot {
     return super.ready();
   }
 
-  async webhook() {
-    console.log(arguments[0]);
+  async webhook({ query, body }) {
+    console.log(query);
+    console.log(body);
     return {};
   }
 }

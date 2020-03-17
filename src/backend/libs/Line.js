@@ -21,8 +21,8 @@ class Business extends Bot {
   }
 
   async webhook({ query, body }) {
-    console.log(query);
-    console.log(body);
+    console.log(JSON.stringify(query));
+    console.log(JSON.stringify(body));
     return {};
   }
 }

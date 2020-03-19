@@ -1,4 +1,5 @@
 const path = require('path');
+const line = require('@line/bot-sdk');
 
 const Bot = require(path.resolve(__dirname, 'Bot.js'));
 

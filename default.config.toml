@@ -1,11 +1,16 @@
-# MerMer Default Config
+# Cafeca Default Config
 
-title = "MerMer"
+title = "Cafeca"
 
 [base]
-folder = "MerMer-framework"
+folder = "Cafeca"
 static = "./build/frontend/"
 debug = false
+
+[line]
+channelId = ""
+channelAccessToken = ""
+channelSecret = ""
 
 [blockchain]
 type = "ethereum"

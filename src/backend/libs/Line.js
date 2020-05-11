@@ -1,4 +1,5 @@
 const path = require('path');
+const dvalue = require('dvalue');
 const LineBot = require('@line/bot-sdk');
 
 const Bot = require(path.resolve(__dirname, 'Bot.js'));
@@ -29,9 +30,20 @@ class Line extends Bot {
   }
 
   async webhook({ query, body }) {
-    console.log(JSON.stringify(query));
-    console.log(JSON.stringify(body));
-    return {};
+    const events = body.events;
+    return events.map((event) => {
+      return this.eventHandler({ event });
+    });
+  }
+
+  async eventHandler({ event }) {
+    console.log(event);
+    messages = dvalue.randomPick(["Hi", "Yooooo", "罵咖你們好哇"])[0]
+    const replyMessage = {
+      type: "text",
+      text: messages
+    };
+    return client.replyMessage(event.replyToken, replyMessage);
   }
 }
 

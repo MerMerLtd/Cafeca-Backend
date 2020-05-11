@@ -1,0 +1,7 @@
+{
+  "_table": "AttendanceRecord",
+  "id": "primary",
+  "uid": "string",
+  "start": "number",
+  "end": "number"
+}

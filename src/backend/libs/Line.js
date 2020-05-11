@@ -9,8 +9,15 @@ class Business extends Bot {
     this.name = 'Line';
   }
 
-  init({ database, logger, i18n }) {
-    return super.init({ database, logger, i18n });
+  async init({ database, config, logger, i18n }) {
+    await this.initialLineBot(config.line);
+    return super.init({ database, config, logger, i18n });
+  }
+
+  async initialLineBot({ channelId, channelAccessToken, channelSecret }) {
+    this.line = line({ channelId, channelSecret, channelAccessToken });
+    console.log(this.line);
+    return this.line;
   }
 
   async start() {

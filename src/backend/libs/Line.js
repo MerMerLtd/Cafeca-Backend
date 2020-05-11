@@ -37,7 +37,7 @@ class Line extends Bot {
   }
 
   async eventHandler({ event }) {
-    const message = dvalue.randomPick(["Hi", "Yooooo", "罵咖你們好哇"])[0]
+    const message = dvalue.randomPick(["Hi", "Yooooo", "罵咖你們好哇"]);
     const replyMessage = {
       type: "text",
       text: message

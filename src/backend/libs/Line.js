@@ -38,10 +38,10 @@ class Line extends Bot {
 
   async eventHandler({ event }) {
     console.log(event);
-    messages = dvalue.randomPick(["Hi", "Yooooo", "罵咖你們好哇"])[0]
+    const message = dvalue.randomPick(["Hi", "Yooooo", "罵咖你們好哇"])[0]
     const replyMessage = {
       type: "text",
-      text: messages
+      text: message
     };
     return client.replyMessage(event.replyToken, replyMessage);
   }

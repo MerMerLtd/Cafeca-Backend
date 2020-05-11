@@ -37,12 +37,13 @@ class Line extends Bot {
   }
 
   async eventHandler({ event }) {
-    console.log(event);
     const message = dvalue.randomPick(["Hi", "Yooooo", "罵咖你們好哇"])[0]
     const replyMessage = {
       type: "text",
       text: message
     };
+    console.log(event.replyToken);
+    console.log(replyMessage)
     return this.LineBot.replyMessage(event.replyToken, replyMessage);
   }
 }

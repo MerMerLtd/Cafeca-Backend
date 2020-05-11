@@ -1,0 +1,9 @@
+body {
+  background-color: #fff;
+}
+
+card {
+  display: inline-block;
+  width: 900vw;
+  height: 1440vh;
+}

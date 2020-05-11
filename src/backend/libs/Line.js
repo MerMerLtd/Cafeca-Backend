@@ -10,7 +10,6 @@ class Line extends Bot {
   }
 
   async init({ database, config, logger, i18n }) {
-    console.log(config.line);
     await this.initialLineBot(config.line);
     return super.init({ database, config, logger, i18n });
   }

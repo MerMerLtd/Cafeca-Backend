@@ -10,12 +10,12 @@ class Line extends Bot {
   }
 
   async init({ database, config, logger, i18n }) {
+    console.log(config.line);
     await this.initialLineBot(config.line);
     return super.init({ database, config, logger, i18n });
   }
 
   async initialLineBot({ channelAccessToken, channelSecret }) {
-    console.log(channelAccessToken, channelSecret);
     this.LineBot = new LineBot.Client({ channelSecret, channelAccessToken });
     console.log(this.LineBot);
     return this.LineBot;

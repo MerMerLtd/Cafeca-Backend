@@ -1,5 +1,5 @@
 const path = require('path');
-const line = require('@line/bot-sdk');
+const LineBot = require('@line/bot-sdk');
 
 const Bot = require(path.resolve(__dirname, 'Bot.js'));
 
@@ -15,9 +15,9 @@ class Line extends Bot {
   }
 
   async initialLineBot({ channelId, channelAccessToken, channelSecret }) {
-    this.line = line({ channelId, channelSecret, channelAccessToken });
-    console.log(this.line);
-    return this.line;
+    this.LineBot = new LineBot.Client({ channelId, channelSecret, channelAccessToken });
+    console.log(this.LineBot);
+    return this.LineBot;
   }
 
   async start() {

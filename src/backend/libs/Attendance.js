@@ -21,4 +21,4 @@ class Attendance extends Bot {
   }
 }
 
-module.exports = Asset;
+module.exports = Attendance;

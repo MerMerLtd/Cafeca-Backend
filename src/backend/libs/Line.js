@@ -3,7 +3,7 @@ const line = require('@line/bot-sdk');
 
 const Bot = require(path.resolve(__dirname, 'Bot.js'));
 
-class Business extends Bot {
+class Line extends Bot {
   constructor() {
     super();
     this.name = 'Line';
@@ -35,4 +35,4 @@ class Business extends Bot {
   }
 }
 
-module.exports = Business;
+module.exports = Line;

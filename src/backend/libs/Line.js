@@ -43,7 +43,7 @@ class Line extends Bot {
       type: "text",
       text: message
     };
-    return client.replyMessage(event.replyToken, replyMessage);
+    return this.LineBot.replyMessage(event.replyToken, replyMessage);
   }
 }
 

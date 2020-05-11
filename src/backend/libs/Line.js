@@ -15,6 +15,7 @@ class Line extends Bot {
   }
 
   async initialLineBot({ channelId, channelAccessToken, channelSecret }) {
+    console.log(channelId, channelAccessToken, channelSecret);
     this.LineBot = new LineBot.Client({ channelId, channelSecret, channelAccessToken });
     console.log(this.LineBot);
     return this.LineBot;
